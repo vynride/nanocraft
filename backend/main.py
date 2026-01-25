@@ -1,15 +1,18 @@
-from typing import Union
-
 from fastapi import FastAPI
+from database import get_db
 
-app = FastAPI()
+app = FastAPI(title="NanoCraft Backend")
 
 
 @app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+def root():
+    return {"status": "NanoCraft backend running"}
 
 
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/test-db")
+def test_db():
+    db = get_db()
+    result = db.test.insert_one(
+        {"message": "MongoDB connected successfully"}
+    )
+    return {"inserted_id": str(result.inserted_id)}
