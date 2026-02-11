@@ -7,6 +7,7 @@ from pydantic import BaseModel, ValidationError
 from utils.gemini import generate_instructions
 from utils.scraper import scrape_site
 from utils.workers import generate_image
+from scraper import scrape_instructables_page
 
 app = FastAPI(title="NanoCraft Backend")
 
@@ -90,3 +91,15 @@ async def new_chat(payload: NewChatRequest):
         raise HTTPException(status_code=422, detail=e.errors()) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
+    
+@app.get("/scrape")
+async def scrape_demo():
+    
+    url = "https://www.instructables.com/How-to-Make-a-Paper-Airplane/"
+
+    scraped_text = await scrape_instructables_page(url)
+
+    return {
+        "scraped_text": scraped_text[:2000]  
+    }
+
