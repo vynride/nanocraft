@@ -1,13 +1,97 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NanoCraft | AI-Powered DIY Learning</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "charcoal-bg": "#1A1A1A", 
+                        "charcoal": "#2C2C2C",
+                        "charcoal-dark": "#1F1F1F",
+                        "charcoal-darkest": "#0F0F0F",
+                        "workspace-bg": "#1A1A1A",
+                        "panel-dark": "#222222",
+                        "panel-light": "#252525",
+                        "graphite": "#383838",
+                        "clay": "#9E8C81",
+                        "clay-muted": "#8C7B70",
+                        "clay-dark": "#6B5D55",
+                        "off-white": "#F2F0EB",
+                        "stone-light": "#E5E2DD",
+                        "stone-dim": "#A8A29E",
+                        "alert-red": "#7F3E3E",
+                        "alert-bg": "#2F1A1A",
+                    },
+                    fontFamily: {
+                        "sans": ["Lexend", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #1A1A1A;
+            color: #E5E2DD;
+        }
+        .clay-button {
+            background-color: #9E8C81;
+            transition: all 0.3s ease;
+        }
+        .clay-button:hover {
+            background-color: #F2F0EB;
+            color: #1A1A1A;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F1F1F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #383838;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .shimmer-bg {
+            background: linear-gradient(to right, #2A2A2A 8%, #333333 18%, #2A2A2A 33%);
+            background-size: 1000px 100%;
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .animate-shimmer {
+            animation: shimmer 2s linear infinite;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="antialiased overflow-x-hidden">
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<script type="module" src="/index.tsx"></script>
+</body>
 </html>
