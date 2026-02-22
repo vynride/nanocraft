@@ -101,7 +101,7 @@ async def _generate_images_background(project_id: str, project_data: dict):
             )
 
         # Small delay between requests to avoid rate limits on Cloudflare
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
 
     logger.info(
         "Image generation complete for project %s: %d ok, %d failed",

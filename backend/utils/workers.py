@@ -10,10 +10,10 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-STEPS = 25
+STEPS = 8
 WIDTH = 512
 HEIGHT = 512
-TIMEOUT = 90
+TIMEOUT = 40
 MAX_RETRIES = 3
 RETRY_BACKOFF = 2
 

@@ -57,7 +57,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
       } catch (err) {
         console.warn("Image polling error:", err);
       }
-    }, 5000);
+    }, 2000);
 
     return () => {
       if (pollingRef.current) clearInterval(pollingRef.current);
