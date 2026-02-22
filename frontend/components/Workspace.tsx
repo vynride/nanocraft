@@ -33,6 +33,20 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const chatInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Track seen images
+  const [seenImages, setSeenImages] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (steps[currentStepIdx]?.imageUrl) {
+      setSeenImages((prev) => {
+        if (prev.has(currentStepIdx)) return prev;
+        const newSet = new Set(prev);
+        newSet.add(currentStepIdx);
+        return newSet;
+      });
+    }
+  }, [currentStepIdx, steps]);
+
   // Poll for image updates
   useEffect(() => {
     const allImagesLoaded = steps.every((s) => s.imageUrl);
@@ -303,17 +317,17 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                           >
                             Step {step.stepNumber}
                           </h3>
-                          {step.imageUrl ? (
-                            <span
-                              className="w-1.5 h-1.5 rounded-full bg-green-500/70"
-                              title="Image ready"
-                            ></span>
-                          ) : (
+                          {!step.imageUrl ? (
                             <span
                               className="w-1.5 h-1.5 rounded-full bg-clay/50 animate-pulse"
                               title="Generating image..."
                             ></span>
-                          )}
+                          ) : !seenImages.has(idx) ? (
+                            <span
+                              className="w-1.5 h-1.5 rounded-full bg-green-500/70"
+                              title="Image ready"
+                            ></span>
+                          ) : null}
                         </div>
                         {idx === currentStepIdx && (
                           <p className="text-xs text-stone-light/70 leading-loose">
