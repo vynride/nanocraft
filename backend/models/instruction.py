@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -7,6 +7,7 @@ class Step(BaseModel):
     step_number: int
     scene_description: str
     alt_text: str
+    image_url: Optional[str] = None
 
 
 class Project(BaseModel):
@@ -16,5 +17,6 @@ class Project(BaseModel):
 
 
 class Instruction(BaseModel):
+    id: Optional[str] = None
     source_url: str
     project: Project

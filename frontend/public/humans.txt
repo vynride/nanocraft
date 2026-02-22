@@ -1,0 +1,14 @@
+/* TEAM */
+Creator: NanoCraft Systems
+Role: Architecture & Design
+
+/* SITE */
+Last update: 2026/02/21
+Language: English
+Doctype: HTML5
+IDE: Code
+
+/* TECH STACK */
+Framework: React, Vite
+Styling: Tailwind CSS, Vanilla CSS
+Languages: TypeScript, HTML, CSS

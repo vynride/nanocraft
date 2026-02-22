@@ -3,6 +3,7 @@ export interface Step {
   stepNumber: number;
   sceneDescription: string;
   altText: string;
+  imageUrl?: string;
   isCompleted: boolean;
 }
 
@@ -14,9 +15,3 @@ export interface Project {
   url?: string;
 }
 
-export enum AppState {
-  LIBRARY = 'LIBRARY',
-  LANDING = 'LANDING',
-  PROCESSING = 'PROCESSING',
-  WORKSPACE = 'WORKSPACE'
-}

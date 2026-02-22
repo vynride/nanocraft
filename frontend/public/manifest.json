@@ -1,0 +1,17 @@
+{
+  "name": "NanoCraft AI Workspace",
+  "short_name": "NanoCraft",
+  "description": "Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1A1A1A",
+  "background_color": "#1A1A1A",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["education", "lifestyle", "productivity"]
+}

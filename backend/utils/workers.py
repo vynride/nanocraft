@@ -1,12 +1,10 @@
+import asyncio
 import base64
 import os
-import asyncio
 import logging
-from pathlib import Path
 
-import requests
+import httpx
 from dotenv import load_dotenv
-from requests.exceptions import Timeout
 
 load_dotenv()
 
@@ -15,7 +13,9 @@ logger = logging.getLogger(__name__)
 STEPS = 25
 WIDTH = 512
 HEIGHT = 512
-TIMEOUT = 60
+TIMEOUT = 90
+MAX_RETRIES = 3
+RETRY_BACKOFF = 2
 
 CLOUDFLARE_ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
 CLOUDFLARE_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
@@ -28,11 +28,9 @@ if not all([CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, CLOUDFLARE_MODEL]):
     )
 
 URL = f"https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/run/{CLOUDFLARE_MODEL}"
-HEADERS = {"Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}"}
-
-
-TEMP_DIR = Path(__file__).parent.parent / "temp"
-TEMP_DIR.mkdir(exist_ok=True)
+HEADERS = {
+    "Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}",
+}
 
 
 async def generate_image(
@@ -46,81 +44,92 @@ async def generate_image(
     """
     Generate an image using Cloudflare Workers AI.
     """
-    result = {"image_id": image_id, "success": False, "error": None, "path": None}
+    result = {
+        "image_id": image_id,
+        "success": False,
+        "error": None,
+        "image_bytes": None,
+    }
 
-    DATA = {"prompt": prompt, "steps": steps, "width": width, "height": height}
+    # Cloudflare Workers AI image models expect multipart form data
+    form_data = {
+        "prompt": prompt,
+        "num_steps": str(steps),
+        "width": str(width),
+        "height": str(height),
+    }
 
-    # Network request handling (run in thread pool to avoid blocking)
+    last_error: str | None = None
+
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                response = await client.post(URL, headers=HEADERS, data=form_data)
+        except httpx.TimeoutException:
+            last_error = f"Image generation timeout for {image_id}"
+            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
+            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            continue
+        except httpx.ConnectError:
+            last_error = f"Image generation service unavailable for {image_id}"
+            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
+            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            continue
+        except httpx.RequestError as e:
+            last_error = f"Failed to reach image generation service for {image_id}: {e}"
+            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
+            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            continue
+
+        # Retry on server errors (5xx)
+        if response.status_code >= 500:
+            last_error = (
+                f"Image generation failed for {image_id} "
+                f"with status {response.status_code}: {response.text[:200]}"
+            )
+            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
+            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            continue
+
+        # Non-retryable error (4xx)
+        if response.status_code != 200:
+            result["error"] = (
+                f"Image generation failed for {image_id} "
+                f"with status {response.status_code}: {response.text[:200]}"
+            )
+            logger.error(result["error"])
+            return result
+
+        # Success, break out of retry loop
+        break
+    else:
+        # All retries exhausted
+        result["error"] = last_error
+        logger.error("All retries exhausted for step %s: %s", image_id, last_error)
+        return result
+
     try:
-        loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(
-            None,
-            lambda: requests.post(URL, headers=HEADERS, files=DATA, timeout=timeout),
-        )
-
-    except Timeout:
-        error_msg = f"Image generation timeout for {image_id}"
-        logger.error(error_msg)
-        result["error"] = error_msg
+        resp_json = response.json()
+    except Exception:
+        result["error"] = f"Invalid JSON response from image generation service for {image_id}"
+        logger.error(result["error"])
         return result
 
-    except ConnectionError:
-        error_msg = f"Image generation service unavailable for {image_id}"
-        logger.error(error_msg)
-        result["error"] = error_msg
+    if not resp_json:
+        result["error"] = f"Empty response from image generation service for {image_id}"
+        logger.error(result["error"])
         return result
 
-    except requests.RequestException as e:
-        error_msg = f"Failed to reach image generation service for {image_id}: {str(e)}"
-        logger.error(error_msg)
-        result["error"] = error_msg
-        return result
-
-    if response.status_code != 200:
-        error_msg = (
-            f"Image generation failed for {image_id} with status {response.status_code}"
-        )
-        logger.error(error_msg)
-        result["error"] = error_msg
-        return result
-
+    # Decode base64 image
     try:
-        payload = response.json()
-    except requests.JSONDecodeError:
-        error_msg = f"Invalid response from image generation service for {image_id}"
-        logger.error(error_msg)
-        result["error"] = error_msg
-        return result
-
-    if not payload:
-        error_msg = f"Empty response from image generation service for {image_id}"
-        logger.error(error_msg)
-        result["error"] = error_msg
-        return result
-
-    # Decode base64 image and save it
-    try:
-        base64_img = payload["result"]["image"]
+        base64_img = resp_json["result"]["image"]
         image_bytes = base64.b64decode(base64_img)
     except (KeyError, TypeError) as e:
-        error_msg = f"Failed to decode image data for {image_id}: {str(e)}"
-        logger.error(error_msg)
-        result["error"] = error_msg
+        result["error"] = f"Failed to decode image data for {image_id}: {e}"
+        logger.error(result["error"])
         return result
 
-    # Store image in temp folder
-    image_filename = f"image-{image_id}.jpg"
-    image_path = TEMP_DIR / image_filename
-
-    try:
-        with open(image_path, "wb") as f:
-            f.write(image_bytes)
-        result["success"] = True
-        result["path"] = str(image_path)
-        logger.info(f"Successfully generated and saved image: {image_filename}")
-        return result
-    except OSError as e:
-        error_msg = f"Failed to save generated image {image_id}: {str(e)}"
-        logger.error(error_msg)
-        result["error"] = error_msg
-        return result
+    result["success"] = True
+    result["image_bytes"] = image_bytes
+    logger.info("Successfully generated image for step %s (attempt %d)", image_id, attempt + 1)
+    return result

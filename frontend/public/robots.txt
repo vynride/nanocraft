@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nanocraft.app/sitemap.xml
