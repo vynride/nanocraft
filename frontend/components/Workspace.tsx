@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import { Project, Step } from "../types";
 import {
   fetchProject,
@@ -136,8 +137,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
         className="w-full px-6 py-4 flex justify-between items-center bg-charcoal-dark border-b border-white/5 h-16 shrink-0 z-20"
         role="banner"
       >
-        <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-3 group">
+        <div className="flex items-center gap-4 flex-1">
+          <Link to="/" className="flex items-center gap-3 group shrink-0">
             <div className="w-6 h-6 flex items-center justify-center">
               <LogoIcon className="text-clay" size={22} />
             </div>
@@ -145,8 +146,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
               NanoCraft
             </span>
           </Link>
-          <div className="h-4 w-px bg-white/10 mx-2"></div>
-          <h1 className="text-sm font-light text-stone-light/80 tracking-wide truncate max-w-md">
+          <div className="h-4 w-px bg-white/10 mx-2 shrink-0"></div>
+          <h1 className="text-sm font-light text-stone-light/80 tracking-wide">
             {project.title}
           </h1>
         </div>
@@ -154,9 +155,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
           <button className="bg-clay/10 hover:bg-clay/20 text-clay-muted hover:text-off-white px-4 py-1.5 text-xs uppercase tracking-widest border border-clay/20 transition-all rounded-sm">
             Export
           </button>
-          <div className="w-8 h-8 rounded-full bg-panel-light flex items-center justify-center text-stone-light/60 border border-white/5">
-            <span className="material-symbols-outlined text-sm">person</span>
-          </div>
         </div>
       </header>
 
@@ -164,9 +162,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
         {/* Visualizer (Center Panel) */}
         <section className="flex-1 flex flex-col bg-workspace-bg relative overflow-hidden">
           <div className="h-12 bg-workspace-bg border-b border-white/5 flex items-center px-6 justify-between">
-            <div className="flex items-center gap-1 bg-panel-light rounded p-1 border border-white/5"></div>
+            <div className="flex items-center gap-1 bg-panel-light"></div>
             <div className="flex items-center gap-4 text-xs text-stone-light/40">
-              <span>Scale 1:5</span>
               <div className="flex gap-1 items-center bg-panel-light px-2 py-1 rounded border border-white/5 cursor-pointer hover:border-white/20 hover:text-stone-light transition-colors">
                 <span>
                   Step {currentStepIdx + 1} of {steps.length}
@@ -259,7 +256,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
               <span className="material-symbols-outlined text-sm">
                 smart_toy
               </span>
-              AI Chat
+              DIY Assistant
             </button>
           </div>
 
@@ -398,11 +395,47 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                           : "bg-charcoal-dark/80 text-stone-light/90 rounded-t-lg rounded-br-lg border border-white/5"
                       }`}
                       style={{
-                        whiteSpace: "pre-wrap",
                         wordBreak: "break-word",
                       }}
                     >
-                      {msg.content}
+                      {msg.role === "assistant" ? (
+                        <div className="markdown-body space-y-2">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ node, ...props }) => (
+                                <p className="mb-2 last:mb-0" {...props} />
+                              ),
+                              ul: ({ node, ...props }) => (
+                                <ul
+                                  className="list-disc pl-4 mb-2 last:mb-0"
+                                  {...props}
+                                />
+                              ),
+                              ol: ({ node, ...props }) => (
+                                <ol
+                                  className="list-decimal pl-4 mb-2 last:mb-0"
+                                  {...props}
+                                />
+                              ),
+                              li: ({ node, ...props }) => (
+                                <li className="mb-1 last:mb-0" {...props} />
+                              ),
+                              strong: ({ node, ...props }) => (
+                                <strong
+                                  className="font-semibold text-off-white"
+                                  {...props}
+                                />
+                              ),
+                            }}
+                          >
+                            {msg.content}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        <div style={{ whiteSpace: "pre-wrap" }}>
+                          {msg.content}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
