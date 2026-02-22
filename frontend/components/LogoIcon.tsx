@@ -1,12 +1,11 @@
-
-import React from 'react';
+import React from "react";
 
 interface LogoIconProps {
   className?: string;
   size?: number;
 }
 
-const LogoIcon: React.FC<LogoIconProps> = ({ className = '', size = 32 }) => (
+const LogoIcon: React.FC<LogoIconProps> = ({ className = "", size = 32 }) => (
   <img
     src="/logo.svg"
     alt="NanoCraft logo"

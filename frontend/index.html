@@ -1,172 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
-    <meta name="description" content="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft.">
-    <meta name="keywords" content="DIY, instructables, visual guide, learning, maker, craft, tutorial, AI, step-by-step">
-    <meta name="author" content="NanoCraft Systems">
-    <meta name="theme-color" content="#1A1A1A">
-    <meta name="color-scheme" content="dark">
-    <meta name="robots" content="index, follow">
-    <meta name="format-detection" content="telephone=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0"
+    />
+    <meta
+      name="description"
+      content="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft."
+    />
+    <meta
+      name="keywords"
+      content="DIY, instructables, visual guide, learning, maker, craft, tutorial, AI, step-by-step"
+    />
+    <meta name="author" content="NanoCraft Systems" />
+    <meta name="theme-color" content="#1A1A1A" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow" />
+    <meta name="format-detection" content="telephone=no" />
     <!-- Security Hint -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
 
     <title>NanoCraft | Structured Knowledge from Raw Instructions</title>
-    
-    <link rel="icon" type="image/svg+xml" href="/logo.svg">
-    <link rel="apple-touch-icon" href="/logo.svg">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="canonical" href="https://nanocraft.app/">
+
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://nanocraft.app/" />
 
     <!-- Open Graph (Facebook/LinkedIn/Discord) Default -->
-    <meta property="og:site_name" content="NanoCraft">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="NanoCraft | Structured Knowledge from Raw Instructions">
-    <meta property="og:description" content="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft.">
-    <meta property="og:url" content="https://nanocraft.app/">
-    <meta property="og:image" content="https://nanocraft.app/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="NanoCraft - Structured knowledge from raw instructions">
+    <meta property="og:site_name" content="NanoCraft" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="NanoCraft | Structured Knowledge from Raw Instructions"
+    />
+    <meta
+      property="og:description"
+      content="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft."
+    />
+    <meta property="og:url" content="https://nanocraft.app/" />
+    <meta property="og:image" content="https://nanocraft.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="NanoCraft - Structured knowledge from raw instructions"
+    />
 
     <!-- Twitter Card Default -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NanoCraft | Structured Knowledge from Raw Instructions">
-    <meta name="twitter:description" content="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft.">
-    <meta name="twitter:image" content="https://nanocraft.app/og-image.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="NanoCraft | Structured Knowledge from Raw Instructions"
+    />
+    <meta
+      name="twitter:description"
+      content="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft."
+    />
+    <meta name="twitter:image" content="https://nanocraft.app/og-image.png" />
 
     <!-- Resource Hints & DNS Prefetch -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="dns-prefetch" href="https://esm.sh">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+    <link rel="dns-prefetch" href="https://esm.sh" />
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap"
+      as="style"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      />
     </noscript>
-    
+
     <!-- JSON-LD Structured Data Base -->
     <script type="application/ld+json">
-    [
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "NanoCraft",
-        "url": "https://nanocraft.app/",
-        "image": "https://nanocraft.app/og-image.png",
-        "description": "Transform any DIY URL into a pristine, visual-first learning guide.",
-        "applicationCategory": "EducationalApplication",
-        "operatingSystem": "All",
-        "offers": {
-          "@type": "Offer",
-          "price": "0"
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "NanoCraft",
+          "url": "https://nanocraft.app/",
+          "image": "https://nanocraft.app/og-image.png",
+          "description": "Transform any DIY URL into a pristine, visual-first learning guide.",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "NanoCraft Systems",
+          "url": "https://nanocraft.app/",
+          "logo": "https://nanocraft.app/logo.svg"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "NanoCraft",
+          "url": "https://nanocraft.app/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://nanocraft.app/?url={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
         }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "NanoCraft Systems",
-        "url": "https://nanocraft.app/",
-        "logo": "https://nanocraft.app/logo.svg"
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "NanoCraft",
-        "url": "https://nanocraft.app/",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://nanocraft.app/?url={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      }
-    ]
+      ]
     </script>
-    
+
     <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "charcoal-bg": "#1A1A1A", 
-                        "charcoal": "#2C2C2C",
-                        "charcoal-dark": "#1F1F1F",
-                        "charcoal-darkest": "#0F0F0F",
-                        "workspace-bg": "#1A1A1A",
-                        "panel-dark": "#222222",
-                        "panel-light": "#252525",
-                        "graphite": "#383838",
-                        "clay": "#9E8C81",
-                        "clay-muted": "#8C7B70",
-                        "clay-dark": "#6B5D55",
-                        "off-white": "#F2F0EB",
-                        "stone-light": "#E5E2DD",
-                        "stone-dim": "#A8A29E",
-                        "alert-red": "#7F3E3E",
-                        "alert-bg": "#2F1A1A",
-                    },
-                    fontFamily: {
-                        "sans": ["Lexend", "sans-serif"],
-                        "display": ["Instrument Serif", "serif"],
-                    },
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "charcoal-bg": "#1A1A1A",
+              charcoal: "#2C2C2C",
+              "charcoal-dark": "#1F1F1F",
+              "charcoal-darkest": "#0F0F0F",
+              "workspace-bg": "#1A1A1A",
+              "panel-dark": "#222222",
+              "panel-light": "#252525",
+              graphite: "#383838",
+              clay: "#9E8C81",
+              "clay-muted": "#8C7B70",
+              "clay-dark": "#6B5D55",
+              "off-white": "#F2F0EB",
+              "stone-light": "#E5E2DD",
+              "stone-dim": "#A8A29E",
+              "alert-red": "#7F3E3E",
+              "alert-bg": "#2F1A1A",
+            },
+            fontFamily: {
+              sans: ["Lexend", "sans-serif"],
+              display: ["Instrument Serif", "serif"],
+            },
+          },
+        },
+      };
     </script>
     <style>
-        body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #1A1A1A;
-            color: #E5E2DD;
+      body {
+        font-family: "Lexend", sans-serif;
+        background-color: #1a1a1a;
+        color: #e5e2dd;
+      }
+      .clay-button {
+        background-color: #9e8c81;
+        transition: all 0.3s ease;
+      }
+      .clay-button:hover {
+        background-color: #f2f0eb;
+        color: #1a1a1a;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1f1f1f;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #383838;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .shimmer-bg {
+        background: linear-gradient(
+          to right,
+          #2a2a2a 8%,
+          #333333 18%,
+          #2a2a2a 33%
+        );
+        background-size: 1000px 100%;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: -1000px 0;
         }
-        .clay-button {
-            background-color: #9E8C81;
-            transition: all 0.3s ease;
+        100% {
+          background-position: 1000px 0;
         }
-        .clay-button:hover {
-            background-color: #F2F0EB;
-            color: #1A1A1A;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1F1F1F;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #383838;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        .shimmer-bg {
-            background: linear-gradient(to right, #2A2A2A 8%, #333333 18%, #2A2A2A 33%);
-            background-size: 1000px 100%;
-        }
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-        .animate-shimmer {
-            animation: shimmer 2s linear infinite;
-        }
+      }
+      .animate-shimmer {
+        animation: shimmer 2s linear infinite;
+      }
     </style>
 
-<link rel="stylesheet" href="/index.css">
-</head>
-<body class="antialiased overflow-x-hidden">
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body class="antialiased overflow-x-hidden">
     <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

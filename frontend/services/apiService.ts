@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export interface BackendStep {
   step_number: number;
@@ -19,7 +19,7 @@ export interface BackendInstruction {
   project: BackendProject;
 }
 
-import { Project } from '../types';
+import { Project } from "../types";
 
 function mapBackendToProject(data: BackendInstruction): Project {
   return {
@@ -31,9 +31,7 @@ function mapBackendToProject(data: BackendInstruction): Project {
       stepNumber: s.step_number,
       sceneDescription: s.scene_description,
       altText: s.alt_text,
-      imageUrl: s.image_url
-        ? `${API_URL}${s.image_url}`
-        : undefined,
+      imageUrl: s.image_url ? `${API_URL}${s.image_url}` : undefined,
       isCompleted: false,
     })),
   };
@@ -41,8 +39,8 @@ function mapBackendToProject(data: BackendInstruction): Project {
 
 export async function deconstructDIYProject(url: string): Promise<Project> {
   const response = await fetch(`${API_URL}/new-chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ instructables_url: url }),
   });
 
@@ -67,7 +65,7 @@ export async function fetchProject(projectId: string): Promise<Project> {
 }
 
 export interface ChatMessage {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
 }
 
@@ -77,8 +75,8 @@ export async function sendChatMessage(
   history: ChatMessage[],
 ): Promise<string> {
   const response = await fetch(`${API_URL}/projects/${projectId}/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message, history }),
   });
 

@@ -24,7 +24,9 @@ def get_db():
 
 
 # Image helpers (GridFS)
-def store_image(image_id: str, image_bytes: bytes, content_type: str = "image/jpeg") -> str:
+def store_image(
+    image_id: str, image_bytes: bytes, content_type: str = "image/jpeg"
+) -> str:
     """Store image bytes in GridFS. Returns the GridFS file id as a string."""
     file_id = fs.put(
         image_bytes,
@@ -71,6 +73,4 @@ def update_step_image(project_id: str, step_number: int, image_url: str) -> None
         {"_id": ObjectId(project_id), "project.steps.step_number": step_number},
         {"$set": {"project.steps.$.image_url": image_url}},
     )
-    logger.info(
-        "Updated image_url for project %s, step %d", project_id, step_number
-    )
+    logger.info("Updated image_url for project %s, step %d", project_id, step_number)

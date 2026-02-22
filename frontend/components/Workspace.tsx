@@ -1,11 +1,14 @@
-
-import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Project, Step } from '../types';
-import { fetchProject, sendChatMessage, ChatMessage } from '../services/apiService';
-import LogoIcon from './LogoIcon';
-import SEOHead from './SEOHead';
+import * as React from "react";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Project, Step } from "../types";
+import {
+  fetchProject,
+  sendChatMessage,
+  ChatMessage,
+} from "../services/apiService";
+import LogoIcon from "./LogoIcon";
+import SEOHead from "./SEOHead";
 
 interface WorkspaceProps {
   project: Project;
@@ -19,11 +22,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
   const currentStep = steps[currentStepIdx];
 
   // Sidebar tab state
-  const [activeTab, setActiveTab] = useState<'steps' | 'chat'>('steps');
+  const [activeTab, setActiveTab] = useState<"steps" | "chat">("steps");
 
   // Chat state
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [chatInput, setChatInput] = useState('');
+  const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -39,9 +42,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
         const updated = await fetchProject(project.id);
         setSteps((prev) =>
           prev.map((s) => {
-            const match = updated.steps.find((u) => u.stepNumber === s.stepNumber);
+            const match = updated.steps.find(
+              (u) => u.stepNumber === s.stepNumber,
+            );
             return match?.imageUrl ? { ...s, imageUrl: match.imageUrl } : s;
-          })
+          }),
         );
 
         // Stop polling if all images are loaded
@@ -49,7 +54,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
           if (pollingRef.current) clearInterval(pollingRef.current);
         }
       } catch (err) {
-        console.warn('Image polling error:', err);
+        console.warn("Image polling error:", err);
       }
     }, 5000);
 
@@ -60,12 +65,12 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 
   // Auto-scroll chat to bottom
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages, chatLoading]);
 
   // Focus input when switching to chat tab
   useEffect(() => {
-    if (activeTab === 'chat') {
+    if (activeTab === "chat") {
       setTimeout(() => chatInputRef.current?.focus(), 100);
     }
   }, [activeTab]);
@@ -86,10 +91,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
     const message = chatInput.trim();
     if (!message || chatLoading) return;
 
-    const userMsg: ChatMessage = { role: 'user', content: message };
+    const userMsg: ChatMessage = { role: "user", content: message };
     const updatedMessages = [...chatMessages, userMsg];
     setChatMessages(updatedMessages);
-    setChatInput('');
+    setChatInput("");
     setChatError(null);
     setChatLoading(true);
 
@@ -99,18 +104,21 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
         message,
         chatMessages, // send history *before* this message
       );
-      const assistantMsg: ChatMessage = { role: 'assistant', content: response };
+      const assistantMsg: ChatMessage = {
+        role: "assistant",
+        content: response,
+      };
       setChatMessages([...updatedMessages, assistantMsg]);
     } catch (err: any) {
-      console.error('Chat error:', err);
-      setChatError('Failed to get a response. Please try again.');
+      console.error("Chat error:", err);
+      setChatError("Failed to get a response. Please try again.");
     } finally {
       setChatLoading(false);
     }
   };
 
   const handleChatKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendChat();
     }
@@ -118,22 +126,29 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 
   return (
     <div className="bg-workspace-bg text-stone-light min-h-screen flex flex-col font-sans antialiased overflow-hidden">
-      <SEOHead 
-        title={project.title} 
+      <SEOHead
+        title={project.title}
         description={`Interactive visual instruction guide for ${project.title}. Read the complete guide with interactive steps and AI assistance.`}
         image={project.visualAnchor}
       />
       {/* Header */}
-      <header className="w-full px-6 py-4 flex justify-between items-center bg-charcoal-dark border-b border-white/5 h-16 shrink-0 z-20" role="banner">
+      <header
+        className="w-full px-6 py-4 flex justify-between items-center bg-charcoal-dark border-b border-white/5 h-16 shrink-0 z-20"
+        role="banner"
+      >
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-6 h-6 flex items-center justify-center">
               <LogoIcon className="text-clay" size={22} />
             </div>
-            <span className="text-2xl font-display tracking-wide text-off-white">NanoCraft</span>
+            <span className="text-2xl font-display tracking-wide text-off-white">
+              NanoCraft
+            </span>
           </Link>
           <div className="h-4 w-px bg-white/10 mx-2"></div>
-          <h1 className="text-sm font-light text-stone-light/80 tracking-wide truncate max-w-md">{project.title}</h1>
+          <h1 className="text-sm font-light text-stone-light/80 tracking-wide truncate max-w-md">
+            {project.title}
+          </h1>
         </div>
         <div className="flex items-center gap-4">
           <button className="bg-clay/10 hover:bg-clay/20 text-clay-muted hover:text-off-white px-4 py-1.5 text-xs uppercase tracking-widest border border-clay/20 transition-all rounded-sm">
@@ -149,19 +164,29 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
         {/* Visualizer (Center Panel) */}
         <section className="flex-1 flex flex-col bg-workspace-bg relative overflow-hidden">
           <div className="h-12 bg-workspace-bg border-b border-white/5 flex items-center px-6 justify-between">
-            <div className="flex items-center gap-1 bg-panel-light rounded p-1 border border-white/5">
-            </div>
+            <div className="flex items-center gap-1 bg-panel-light rounded p-1 border border-white/5"></div>
             <div className="flex items-center gap-4 text-xs text-stone-light/40">
               <span>Scale 1:5</span>
               <div className="flex gap-1 items-center bg-panel-light px-2 py-1 rounded border border-white/5 cursor-pointer hover:border-white/20 hover:text-stone-light transition-colors">
-                <span>Step {currentStepIdx + 1} of {steps.length}</span>
-                <span className="material-symbols-outlined text-xs">arrow_drop_down</span>
+                <span>
+                  Step {currentStepIdx + 1} of {steps.length}
+                </span>
+                <span className="material-symbols-outlined text-xs">
+                  arrow_drop_down
+                </span>
               </div>
             </div>
           </div>
 
           <div className="flex-1 relative overflow-auto bg-[#1A1A1A]">
-            <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(#9E8C81 1px, transparent 1px), linear-gradient(90deg, #9E8C81 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
+            <div
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(#9E8C81 1px, transparent 1px), linear-gradient(90deg, #9E8C81 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+              }}
+            ></div>
             <div className="absolute inset-0 flex items-center justify-center p-12">
               <div className="relative max-w-3xl w-full aspect-video bg-charcoal-dark border border-white/5 shadow-2xl rounded-sm overflow-hidden flex flex-col items-center justify-center">
                 <div className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-stone-light/30">
@@ -181,7 +206,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                       <div className="absolute inset-0 border-2 border-clay/30 rounded-full"></div>
                       <div className="absolute inset-0 border-2 border-transparent border-t-clay rounded-full animate-spin"></div>
                     </div>
-                    <p className="text-xs uppercase tracking-widest text-stone-light/30">Generating visual…</p>
+                    <p className="text-xs uppercase tracking-widest text-stone-light/30">
+                      Generating visual…
+                    </p>
                   </div>
                 )}
 
@@ -199,7 +226,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                 <span className="material-symbols-outlined text-lg">add</span>
               </button>
               <button className="p-2 hover:bg-white/5 text-stone-light/60 hover:text-white transition-colors">
-                <span className="material-symbols-outlined text-lg">remove</span>
+                <span className="material-symbols-outlined text-lg">
+                  remove
+                </span>
               </button>
             </div>
           </div>
@@ -210,66 +239,89 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
           {/* Tab Buttons */}
           <div className="flex border-b border-white/5">
             <button
-              onClick={() => setActiveTab('steps')}
+              onClick={() => setActiveTab("steps")}
               className={`flex-1 py-4 text-xs uppercase tracking-widest font-medium transition-all ${
-                activeTab === 'steps'
-                  ? 'text-clay border-b-2 border-clay bg-white/5'
-                  : 'text-stone-light/40 hover:text-stone-light hover:bg-white/5'
+                activeTab === "steps"
+                  ? "text-clay border-b-2 border-clay bg-white/5"
+                  : "text-stone-light/40 hover:text-stone-light hover:bg-white/5"
               }`}
             >
               Steps
             </button>
             <button
-              onClick={() => setActiveTab('chat')}
+              onClick={() => setActiveTab("chat")}
               className={`flex-1 py-4 text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-2 ${
-                activeTab === 'chat'
-                  ? 'text-clay border-b-2 border-clay bg-white/5'
-                  : 'text-stone-light/40 hover:text-stone-light hover:bg-white/5'
+                activeTab === "chat"
+                  ? "text-clay border-b-2 border-clay bg-white/5"
+                  : "text-stone-light/40 hover:text-stone-light hover:bg-white/5"
               }`}
             >
-              <span className="material-symbols-outlined text-sm">smart_toy</span>
+              <span className="material-symbols-outlined text-sm">
+                smart_toy
+              </span>
               AI Chat
             </button>
           </div>
 
           {/* Steps Panel */}
-          {activeTab === 'steps' && (
+          {activeTab === "steps" && (
             <>
               <div className="flex-1 overflow-y-auto">
                 {steps.map((step, idx) => (
-                  <div 
-                    key={step.stepNumber} 
+                  <div
+                    key={step.stepNumber}
                     onClick={() => setCurrentStepIdx(idx)}
                     className={`p-5 border-b border-white/5 cursor-pointer transition-all ${
-                      idx === currentStepIdx ? 'bg-white/[0.02] border-l-2 border-l-clay opacity-100' : 
-                      step.isCompleted ? 'opacity-40' : 'opacity-60 hover:opacity-100'
+                      idx === currentStepIdx
+                        ? "bg-white/[0.02] border-l-2 border-l-clay opacity-100"
+                        : step.isCompleted
+                          ? "opacity-40"
+                          : "opacity-60 hover:opacity-100"
                     }`}
                   >
                     <div className="flex items-start gap-4">
-                      <div 
+                      <div
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleStepCompletion(idx);
                         }}
                         className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-sans font-medium ${
-                          step.isCompleted ? 'bg-green-900/30 border-green-700/50 text-green-500' : 'border-stone-light/20 text-stone-light/40'
+                          step.isCompleted
+                            ? "bg-green-900/30 border-green-700/50 text-green-500"
+                            : "border-stone-light/20 text-stone-light/40"
                         }`}
                       >
-                        {step.isCompleted ? <span className="material-symbols-outlined text-sm">check</span> : step.stepNumber}
+                        {step.isCompleted ? (
+                          <span className="material-symbols-outlined text-sm">
+                            check
+                          </span>
+                        ) : (
+                          step.stepNumber
+                        )}
                       </div>
                       <div className="space-y-3 flex-1">
                         <div className="flex items-center gap-2">
-                          <h3 className={`text-sm font-medium ${step.isCompleted ? 'text-stone-light/50 line-through decoration-stone-light/50' : 'text-off-white'}`}>
+                          <h3
+                            className={`text-sm font-medium ${step.isCompleted ? "text-stone-light/50 line-through decoration-stone-light/50" : "text-off-white"}`}
+                          >
                             Step {step.stepNumber}
                           </h3>
                           {step.imageUrl ? (
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500/70" title="Image ready"></span>
+                            <span
+                              className="w-1.5 h-1.5 rounded-full bg-green-500/70"
+                              title="Image ready"
+                            ></span>
                           ) : (
-                            <span className="w-1.5 h-1.5 rounded-full bg-clay/50 animate-pulse" title="Generating image..."></span>
+                            <span
+                              className="w-1.5 h-1.5 rounded-full bg-clay/50 animate-pulse"
+                              title="Generating image..."
+                            ></span>
                           )}
                         </div>
                         {idx === currentStepIdx && (
-                          <p className="text-xs text-stone-light/70 leading-loose">{step.sceneDescription}</p>
+                          <p className="text-xs text-stone-light/70 leading-loose">
+                            {step.sceneDescription}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -277,38 +329,53 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                 ))}
               </div>
               <div className="p-4 bg-panel-light border-t border-white/5">
-                <button 
+                <button
                   onClick={handleNextStep}
                   className="w-full clay-button bg-clay text-charcoal-dark hover:bg-off-white hover:text-charcoal px-4 py-3 font-medium text-sm tracking-wide rounded-sm flex items-center justify-center gap-2 transition-all"
                 >
-                  {currentStepIdx === steps.length - 1 ? 'Finish Project' : 'Complete Step'}
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  {currentStepIdx === steps.length - 1
+                    ? "Finish Project"
+                    : "Complete Step"}
+                  <span className="material-symbols-outlined text-sm">
+                    arrow_forward
+                  </span>
                 </button>
               </div>
             </>
           )}
 
           {/* Chat Panel */}
-          {activeTab === 'chat' && (
+          {activeTab === "chat" && (
             <>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {/* Welcome message */}
                 {chatMessages.length === 0 && !chatLoading && (
                   <div className="flex flex-col items-center justify-center h-full text-center px-4 gap-4 opacity-60">
                     <div className="w-12 h-12 rounded-full bg-clay/10 border border-clay/20 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-clay text-xl">smart_toy</span>
+                      <span className="material-symbols-outlined text-clay text-xl">
+                        smart_toy
+                      </span>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-sm font-medium text-off-white">DIY Assistant</p>
+                      <p className="text-sm font-medium text-off-white">
+                        DIY Assistant
+                      </p>
                       <p className="text-xs text-stone-light/50 leading-relaxed">
-                        Ask me anything about this project — materials, techniques, troubleshooting, or tips!
+                        Ask me anything about this project — materials,
+                        techniques, troubleshooting, or tips!
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2 justify-center mt-2">
-                      {['What tools do I need?', 'Any safety tips?', 'Explain step 1'].map((suggestion) => (
+                      {[
+                        "What tools do I need?",
+                        "Any safety tips?",
+                        "Explain step 1",
+                      ].map((suggestion) => (
                         <button
                           key={suggestion}
-                          onClick={() => { setChatInput(suggestion); }}
+                          onClick={() => {
+                            setChatInput(suggestion);
+                          }}
                           className="text-[10px] uppercase tracking-widest px-3 py-1.5 border border-white/10 rounded-sm text-stone-light/50 hover:text-clay hover:border-clay/30 transition-all"
                         >
                           {suggestion}
@@ -320,14 +387,20 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 
                 {/* Messages */}
                 {chatMessages.map((msg, idx) => (
-                  <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    key={idx}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
                     <div
                       className={`max-w-[85%] px-3.5 py-2.5 text-[13px] leading-relaxed ${
-                        msg.role === 'user'
-                          ? 'bg-clay/20 text-off-white rounded-t-lg rounded-bl-lg border border-clay/15'
-                          : 'bg-charcoal-dark/80 text-stone-light/90 rounded-t-lg rounded-br-lg border border-white/5'
+                        msg.role === "user"
+                          ? "bg-clay/20 text-off-white rounded-t-lg rounded-bl-lg border border-clay/15"
+                          : "bg-charcoal-dark/80 text-stone-light/90 rounded-t-lg rounded-br-lg border border-white/5"
                       }`}
-                      style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                      }}
                     >
                       {msg.content}
                     </div>
@@ -339,11 +412,22 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                   <div className="flex justify-start">
                     <div className="bg-charcoal-dark/80 border border-white/5 rounded-t-lg rounded-br-lg px-4 py-3 flex items-center gap-2">
                       <div className="flex gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-clay/60 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-1.5 h-1.5 rounded-full bg-clay/60 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-1.5 h-1.5 rounded-full bg-clay/60 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        <div
+                          className="w-1.5 h-1.5 rounded-full bg-clay/60 animate-bounce"
+                          style={{ animationDelay: "0ms" }}
+                        ></div>
+                        <div
+                          className="w-1.5 h-1.5 rounded-full bg-clay/60 animate-bounce"
+                          style={{ animationDelay: "150ms" }}
+                        ></div>
+                        <div
+                          className="w-1.5 h-1.5 rounded-full bg-clay/60 animate-bounce"
+                          style={{ animationDelay: "300ms" }}
+                        ></div>
                       </div>
-                      <span className="text-[10px] uppercase tracking-widest text-stone-light/30">Thinking…</span>
+                      <span className="text-[10px] uppercase tracking-widest text-stone-light/30">
+                        Thinking…
+                      </span>
                     </div>
                   </div>
                 )}
@@ -351,7 +435,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                 {/* Error */}
                 {chatError && (
                   <div className="flex justify-center">
-                    <p className="text-xs text-red-400/80 bg-red-400/5 border border-red-400/10 rounded px-3 py-2">{chatError}</p>
+                    <p className="text-xs text-red-400/80 bg-red-400/5 border border-red-400/10 rounded px-3 py-2">
+                      {chatError}
+                    </p>
                   </div>
                 )}
 
@@ -376,7 +462,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                     disabled={chatLoading || !chatInput.trim()}
                     className="p-1.5 text-clay hover:text-off-white disabled:text-stone-light/20 transition-colors disabled:cursor-not-allowed"
                   >
-                    <span className="material-symbols-outlined text-lg">send</span>
+                    <span className="material-symbols-outlined text-lg">
+                      send
+                    </span>
                   </button>
                 </div>
               </div>
@@ -389,4 +477,3 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 };
 
 export default Workspace;
-

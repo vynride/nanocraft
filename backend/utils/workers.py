@@ -67,18 +67,24 @@ async def generate_image(
                 response = await client.post(URL, headers=HEADERS, data=form_data)
         except httpx.TimeoutException:
             last_error = f"Image generation timeout for {image_id}"
-            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
-            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            logger.warning(
+                "Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error
+            )
+            await asyncio.sleep(RETRY_BACKOFF * (2**attempt))
             continue
         except httpx.ConnectError:
             last_error = f"Image generation service unavailable for {image_id}"
-            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
-            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            logger.warning(
+                "Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error
+            )
+            await asyncio.sleep(RETRY_BACKOFF * (2**attempt))
             continue
         except httpx.RequestError as e:
             last_error = f"Failed to reach image generation service for {image_id}: {e}"
-            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
-            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            logger.warning(
+                "Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error
+            )
+            await asyncio.sleep(RETRY_BACKOFF * (2**attempt))
             continue
 
         # Retry on server errors (5xx)
@@ -87,8 +93,10 @@ async def generate_image(
                 f"Image generation failed for {image_id} "
                 f"with status {response.status_code}: {response.text[:200]}"
             )
-            logger.warning("Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error)
-            await asyncio.sleep(RETRY_BACKOFF * (2 ** attempt))
+            logger.warning(
+                "Attempt %d/%d: %s", attempt + 1, MAX_RETRIES + 1, last_error
+            )
+            await asyncio.sleep(RETRY_BACKOFF * (2**attempt))
             continue
 
         # Non-retryable error (4xx)
@@ -111,7 +119,9 @@ async def generate_image(
     try:
         resp_json = response.json()
     except Exception:
-        result["error"] = f"Invalid JSON response from image generation service for {image_id}"
+        result["error"] = (
+            f"Invalid JSON response from image generation service for {image_id}"
+        )
         logger.error(result["error"])
         return result
 
@@ -131,5 +141,7 @@ async def generate_image(
 
     result["success"] = True
     result["image_bytes"] = image_bytes
-    logger.info("Successfully generated image for step %s (attempt %d)", image_id, attempt + 1)
+    logger.info(
+        "Successfully generated image for step %s (attempt %d)", image_id, attempt + 1
+    )
     return result

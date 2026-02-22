@@ -1,4 +1,3 @@
-
 export interface Step {
   stepNumber: number;
   sceneDescription: string;
@@ -14,4 +13,3 @@ export interface Project {
   steps: Step[];
   url?: string;
 }
-

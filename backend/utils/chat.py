@@ -27,9 +27,7 @@ def _build_system_prompt(project_data: dict) -> str:
 
     steps_text = ""
     for step in project.get("steps", []):
-        steps_text += (
-            f"- **Step {step['step_number']}:** {step['scene_description']}\n"
-        )
+        steps_text += f"- **Step {step['step_number']}:** {step['scene_description']}\n"
 
     return CHAT_SYSTEM_PROMPT.format(
         title=title,

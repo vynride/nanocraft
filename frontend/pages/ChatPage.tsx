@@ -1,10 +1,9 @@
-
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Project } from '../types';
-import Workspace from '../components/Workspace';
-import Processing from '../components/Processing';
-import { fetchProject } from '../services/apiService';
+import React, { useState, useEffect } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { Project } from "../types";
+import Workspace from "../components/Workspace";
+import Processing from "../components/Processing";
+import { fetchProject } from "../services/apiService";
 
 interface LocationState {
   project?: Project;
@@ -16,7 +15,9 @@ const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const locationState = location.state as LocationState | null;
 
-  const [project, setProject] = useState<Project | null>(locationState?.project || null);
+  const [project, setProject] = useState<Project | null>(
+    locationState?.project || null,
+  );
   const [loading, setLoading] = useState(!project);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,9 +49,11 @@ const ChatPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-charcoal-bg flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-off-white text-xl font-display">{error || "Project not found"}</p>
+          <p className="text-off-white text-xl font-display">
+            {error || "Project not found"}
+          </p>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="clay-button text-charcoal-dark font-display px-6 py-3 text-sm tracking-wide rounded-lg"
           >
             Go Home

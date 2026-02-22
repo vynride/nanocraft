@@ -1,9 +1,8 @@
-
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Landing from '../components/Landing';
-import Processing from '../components/Processing';
-import { deconstructDIYProject } from '../services/apiService';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Landing from "../components/Landing";
+import Processing from "../components/Processing";
+import { deconstructDIYProject } from "../services/apiService";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();

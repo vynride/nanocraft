@@ -2,7 +2,14 @@ import asyncio
 import logging
 
 from bson import ObjectId
-from db.database import get_db, store_image, store_project, update_step_image, get_project, get_image
+from db.database import (
+    get_db,
+    store_image,
+    store_project,
+    update_step_image,
+    get_project,
+    get_image,
+)
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -89,14 +96,18 @@ async def _generate_images_background(project_id: str, project_data: dict):
                 logger.error("Failed to store image %s: %s", step_num, e)
         else:
             failed += 1
-            logger.error("Image gen failed for step %s: %s", step_num, result.get("error"))
+            logger.error(
+                "Image gen failed for step %s: %s", step_num, result.get("error")
+            )
 
         # Small delay between requests to avoid rate limits on Cloudflare
         await asyncio.sleep(0.5)
 
     logger.info(
         "Image generation complete for project %s: %d ok, %d failed",
-        project_id, successful, failed,
+        project_id,
+        successful,
+        failed,
     )
 
 
@@ -119,9 +130,7 @@ async def new_chat(payload: NewChatRequest):
         project_id = store_project(doc)
 
         # Background image generation
-        asyncio.create_task(
-            _generate_images_background(project_id, project_data)
-        )
+        asyncio.create_task(_generate_images_background(project_id, project_data))
 
         return Instruction(
             id=project_id,

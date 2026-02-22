@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Helmet } from 'react-helmet-async';
+import * as React from "react";
+import { Helmet } from "react-helmet-async";
 
 interface SEOHeadProps {
   title: string;
@@ -14,9 +14,9 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   title,
   description,
   keywords,
-  image = 'https://nanocraft.app/og-image.png',
-  url = 'https://nanocraft.app/',
-  type = 'website'
+  image = "https://nanocraft.app/og-image.png",
+  url = "https://nanocraft.app/",
+  type = "website",
 }) => {
   const fullTitle = `${title} | NanoCraft`;
 
