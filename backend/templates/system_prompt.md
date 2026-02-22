@@ -8,7 +8,7 @@
 
 **JSON Schema:**
 {
-"project_summary": "string (A concise title for the project, MAXIMUM 6 words. e.g. 'Repairing Split or Cracked Wood')",
+"project_summary": "string (A short, informative title for the DIY project, MAXIMUM 5 words. e.g. 'LED Filament Bulb Panel')",
 "visual_anchor": "string (Detailed description of the workshop/setting and consistent subject appearance)",
 "steps": [
 {

@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Step(BaseModel):
@@ -11,7 +11,10 @@ class Step(BaseModel):
 
 
 class Project(BaseModel):
-    project_summary: str
+    project_summary: str = Field(
+        ...,
+        description="A short, informative title for the DIY project (e.g., 'LED Filament Bulb Panel'). Maximum 5 words.",
+    )
     visual_anchor: str
     steps: List[Step]
 
