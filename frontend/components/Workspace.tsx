@@ -20,8 +20,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
   const navigate = useNavigate();
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
   const [steps, setSteps] = useState(project.steps);
-  // Tracks steps ticked by clicking the row (separate from button-completed)
-  const [rowChecked, setRowChecked] = useState<Set<number>>(new Set());
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const currentStep = steps[currentStepIdx];
 
@@ -163,7 +161,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
   };
 
   const completedCount = steps.filter(
-    (s, i) => s.isCompleted || rowChecked.has(i),
+    (s) => s.isCompleted,
   ).length;
 
   const handleRowClick = (idx: number) => {
@@ -171,13 +169,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
       // First click: just navigate/expand the step, no tick
       setCurrentStepIdx(idx);
     } else {
-      // Already expanded: toggle the row-level tick
-      setRowChecked((prev) => {
-        const next = new Set(prev);
-        if (next.has(idx)) next.delete(idx);
-        else next.add(idx);
-        return next;
-      });
+      // Second click: toggle completion
+      toggleStepCompletion(idx);
     }
   };
 
@@ -362,16 +355,14 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
             <>
               <div className="flex-1 overflow-y-auto">
                 {steps.map((step, idx) => {
-                  const isButtonDone = step.isCompleted;
-                  const isRowDone = rowChecked.has(idx);
-                  const isAnyDone = isButtonDone || isRowDone;
+                  const isCompleted = step.isCompleted;
                   return (
                     <div
                       key={step.stepNumber}
                       onClick={() => handleRowClick(idx)}
                       className={`px-4 py-3.5 border-b border-white/5 cursor-pointer transition-all ${idx === currentStepIdx
                         ? "bg-white/[0.03] border-l-2 border-l-clay"
-                        : isAnyDone
+                        : isCompleted
                           ? "opacity-35"
                           : "opacity-60 hover:opacity-100"
                         }`}
@@ -383,21 +374,14 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                             e.stopPropagation();
                             toggleStepCompletion(idx);
                           }}
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-medium transition-colors ${isButtonDone
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-medium transition-colors select-none ${isCompleted
                             ? "bg-green-900/30 border-green-700/50 text-green-500"
-                            : isRowDone
-                              ? "bg-teal-900/20 border-teal-600/40 text-teal-400"
-                              : "border-stone-light/20 text-stone-light/40 hover:border-clay/50"
+                            : "border-stone-light/20 text-stone-light/40 hover:border-clay/50"
                             }`}
                         >
-                          {isButtonDone ? (
+                          {isCompleted ? (
                             /* Solid green check — marked via Complete Step button */
                             <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>
-                              check
-                            </span>
-                          ) : isRowDone ? (
-                            /* Outlined teal check — marked by clicking the row */
-                            <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 0" }}>
                               check
                             </span>
                           ) : (
@@ -408,7 +392,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                         <div className="flex-1 min-w-0 space-y-1.5">
                           <div className="flex items-center gap-2">
                             <h3
-                              className={`text-xs font-medium ${isAnyDone
+                              className={`text-xs font-medium ${isCompleted
                                 ? "text-stone-light/40 line-through decoration-stone-light/40"
                                 : "text-off-white"
                                 }`}
