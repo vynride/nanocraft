@@ -10,6 +10,7 @@ from db.database import (
     get_project,
     get_image,
 )
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -203,3 +204,7 @@ async def project_chat(project_id: str, payload: ChatMessageRequest):
     except Exception as e:
         logger.error("Chat error for project %s: %s", project_id, e)
         raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
