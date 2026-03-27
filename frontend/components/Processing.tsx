@@ -7,29 +7,40 @@ const Processing: React.FC = () => {
   const [logs, setLogs] = useState<string[]>([]);
   const [dots, setDots] = useState("");
 
-  useEffect(() => {
-    const logMessages = [
-      "Initializing parsing engine...",
-      "Connecting to neural grid...",
-      "Scraping source metadata...",
-      "Detected distinct steps",
-      "Deconstructing logical flow...",
-      "Extracting material list...",
-      "Optimizing image assets...",
-      "Finalizing visual workspace...",
-    ];
+  const logMessages = [
+    "Initializing parsing engine...",
+    "Connecting to neural grid...",
+    "Scraping source metadata...",
+    "Detected distinct steps",
+    "Deconstructing logical flow...",
+    "Extracting material list...",
+    "Optimizing image assets...",
+    "Finalizing visual workspace...",
+    "Generating final guide...",
+  ];
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [logs]);
+
+  useEffect(() => {
     let i = 0;
     const interval = setInterval(() => {
       if (i < logMessages.length) {
-        // Evaluate the message now to avoid closure issues with 'i'
         const currentMessage = logMessages[i];
         setLogs((prev) => [...prev, currentMessage]);
         i++;
       } else {
         clearInterval(interval);
       }
-    }, 800);
+    }, 2000);
 
     const dotsInterval = setInterval(() => {
       setDots((d) => (d.length < 3 ? d + "." : ""));
@@ -40,6 +51,8 @@ const Processing: React.FC = () => {
       clearInterval(dotsInterval);
     };
   }, []);
+
+  const progress = (logs.length / logMessages.length) * 100;
 
   return (
     <div className="min-h-screen bg-charcoal-darkest text-stone-light flex flex-col antialiased">
@@ -61,8 +74,9 @@ const Processing: React.FC = () => {
         </div>
         <div className="flex items-center gap-6">
           <div className="h-2 w-2 rounded-full bg-clay animate-pulse"></div>
-          <span className="text-xs uppercase tracking-widest text-stone-light/40">
-            Processing{dots}
+          <span className="text-xs uppercase tracking-widest text-stone-light/40 flex items-center">
+            Processing
+            <span className="inline-block w-8 ml-1">{dots}</span>
           </span>
         </div>
       </header>
@@ -78,23 +92,40 @@ const Processing: React.FC = () => {
             </p>
           </div>
           <div className="w-full h-px bg-stone-light/10 relative overflow-hidden">
-            <div className="absolute inset-y-0 left-0 bg-clay w-1/2 animate-[shimmer_2s_infinite]"></div>
+            <div
+              className="absolute inset-y-0 left-0 bg-clay transition-all duration-700 ease-out animate-[shimmer_2s_infinite]"
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
-          <div
-            className="font-mono text-xs space-y-3 text-stone-light/30 h-48 overflow-hidden relative"
-            aria-live="polite"
-            aria-atomic="false"
-          >
-            {logs.map((log, i) => (
-              <div
-                key={i}
-                className={`flex gap-4 ${log && log.startsWith(">") ? "text-clay/80" : ""}`}
-              >
-                <span className="text-stone-light/20">00:0{i + 1}</span>
-                <span>{log}</span>
-              </div>
-            ))}
-            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-charcoal-darkest to-transparent"></div>
+          <div className="relative group">
+            <div
+              ref={scrollRef}
+              className="font-mono text-xs space-y-3 text-stone-light/30 h-56 overflow-y-auto relative pb-12 scroll-smooth"
+              aria-live="polite"
+              aria-atomic="false"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
+            >
+              {logs.map((log, i) => (
+                <div
+                  key={i}
+                  className={`flex gap-4 ${log && log.startsWith(">") ? "text-clay/80" : ""}`}
+                >
+                  <span className="text-stone-light/20">
+                    00:{String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>{log}</span>
+                </div>
+              ))}
+              {/* Spacer to allow last log to scroll past the gradient */}
+              <div className="h-20" />
+            </div>
+            {/* Top Fade */}
+            <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-charcoal-darkest to-transparent pointer-events-none z-10"></div>
+            {/* Bottom Fade */}
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-charcoal-darkest via-charcoal-darkest/80 to-transparent pointer-events-none z-10"></div>
           </div>
         </div>
 

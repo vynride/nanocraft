@@ -65,10 +65,7 @@
     <!-- Resource Hints & DNS Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
-    <link rel="dns-prefetch" href="https://esm.sh" />
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
       rel="preload"
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lexend:wght@300;400;500&display=swap"
@@ -135,86 +132,7 @@
       ]
     </script>
 
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "charcoal-bg": "#1A1A1A",
-              charcoal: "#2C2C2C",
-              "charcoal-dark": "#1F1F1F",
-              "charcoal-darkest": "#0F0F0F",
-              "workspace-bg": "#1A1A1A",
-              "panel-dark": "#222222",
-              "panel-light": "#252525",
-              graphite: "#383838",
-              clay: "#9E8C81",
-              "clay-muted": "#8C7B70",
-              "clay-dark": "#6B5D55",
-              "off-white": "#F2F0EB",
-              "stone-light": "#E5E2DD",
-              "stone-dim": "#A8A29E",
-              "alert-red": "#7F3E3E",
-              "alert-bg": "#2F1A1A",
-            },
-            fontFamily: {
-              sans: ["Lexend", "sans-serif"],
-              display: ["Instrument Serif", "serif"],
-            },
-          },
-        },
-      };
-    </script>
-    <style>
-      body {
-        font-family: "Lexend", sans-serif;
-        background-color: #1a1a1a;
-        color: #e5e2dd;
-      }
-      .clay-button {
-        background-color: #9e8c81;
-        transition: all 0.3s ease;
-      }
-      .clay-button:hover {
-        background-color: #f2f0eb;
-        color: #1a1a1a;
-      }
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #1f1f1f;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #383838;
-        border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-      .shimmer-bg {
-        background: linear-gradient(
-          to right,
-          #2a2a2a 8%,
-          #333333 18%,
-          #2a2a2a 33%
-        );
-        background-size: 1000px 100%;
-      }
-      @keyframes shimmer {
-        0% {
-          background-position: -1000px 0;
-        }
-        100% {
-          background-position: 1000px 0;
-        }
-      }
-      .animate-shimmer {
-        animation: shimmer 2s linear infinite;
-      }
-    </style>
+
 
     <link rel="stylesheet" href="/index.css" />
   </head>

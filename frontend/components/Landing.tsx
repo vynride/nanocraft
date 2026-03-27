@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import LogoIcon from "./LogoIcon";
 import SEOHead from "./SEOHead";
+import BackgroundElements from "./BackgroundElements";
 
 interface LandingProps {
   onGenerate: (url: string) => void;
@@ -19,9 +20,10 @@ const Landing: React.FC<LandingProps> = ({ onGenerate, error }) => {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
+      <BackgroundElements />
       <SEOHead
         title="Home"
-        description="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft."
+        description="Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft"
         keywords="DIY, instructables, visual guide, learning, maker, craft, tutorial, AI, step-by-step"
       />
       <header
@@ -48,7 +50,7 @@ const Landing: React.FC<LandingProps> = ({ onGenerate, error }) => {
             </h1>
             <p className="text-lg text-stone-light/60 font-light max-w-lg mx-auto leading-relaxed">
               Transform any DIY URL into a pristine, visual-first learning guide
-              using NanoCraft.
+              using NanoCraft
             </p>
           </div>
 
@@ -74,7 +76,7 @@ const Landing: React.FC<LandingProps> = ({ onGenerate, error }) => {
                   id="project-url"
                   name="project-url"
                   className="w-full py-4 pl-12 pr-4 bg-charcoal-dark border border-stone-light/10 focus:border-clay focus:ring-1 focus:ring-clay text-off-white placeholder:text-stone-light/20 font-light text-base rounded-lg transition-colors"
-                  placeholder="https://www.instructables.com/id/Your-Project-Link"
+                  placeholder="https://www.instructables.com/Your-Project-Link"
                   aria-label="Paste project URL"
                   required
                   type="url"
@@ -92,21 +94,9 @@ const Landing: React.FC<LandingProps> = ({ onGenerate, error }) => {
                 Generate DIY Instructions
               </button>
             </form>
-            <div className="mt-8 flex justify-center opacity-60">
-              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-stone-light/40"></div>
-            </div>
+
           </section>
         </div>
-
-        {/* Background Dots */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, #9E8C81 1px, transparent 0)",
-            backgroundSize: "40px 40px",
-          }}
-        ></div>
       </main>
 
       <footer

@@ -2,6 +2,7 @@ import logging
 import os
 from datetime import datetime, timezone
 
+import certifi
 from bson import ObjectId
 from dotenv import load_dotenv
 from gridfs import GridFS
@@ -14,7 +15,12 @@ logger = logging.getLogger(__name__)
 MONGO_URI = str(os.getenv("MONGODB_URI"))
 DB_NAME = str(os.getenv("DB_NAME"))
 
-client = MongoClient(MONGO_URI)
+client = MongoClient(
+    MONGO_URI,
+    tlsCAFile=certifi.where(),
+    tlsAllowInvalidCertificates=True,
+    serverSelectionTimeoutMS=5000,
+)
 db = client[DB_NAME]
 fs = GridFS(db)
 
@@ -62,6 +68,14 @@ def store_project(project_data: dict) -> str:
 def get_project(project_id: str) -> dict | None:
     """Get a project document by id."""
     doc = db.projects.find_one({"_id": ObjectId(project_id)})
+    if doc:
+        doc["_id"] = str(doc["_id"])
+    return doc
+
+
+def get_project_by_url(url: str) -> dict | None:
+    """Find an existing project by its source URL."""
+    doc = db.projects.find_one({"source_url": url})
     if doc:
         doc["_id"] = str(doc["_id"])
     return doc

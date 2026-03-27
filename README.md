@@ -1,11 +1,11 @@
 # NanoCraft
 
 <div align="center">
-  
+  <img src="frontend/logo.svg" width="200" alt="NanoCraft Logo">
 
-### Structured Knowledge from Raw Instructions
+  ### Structured Knowledge from Raw Instructions
 
-_The missing piece in your DIY journey. Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft._
+_The missing piece in your DIY journey. Transform any DIY URL into a pristine, visual-first learning guide using NanoCraft_
 
 </div>
 

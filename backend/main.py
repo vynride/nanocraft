@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import httpx
 
 from bson import ObjectId
 from db.database import (
@@ -9,7 +10,9 @@ from db.database import (
     update_step_image,
     get_project,
     get_image,
+    get_project_by_url,
 )
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -115,6 +118,16 @@ async def _generate_images_background(project_id: str, project_data: dict):
 @app.post("/new-chat", response_model=Instruction)
 async def new_chat(payload: NewChatRequest):
     try:
+        # Check if project already exists for this URL
+        existing_doc = get_project_by_url(payload.instructables_url)
+        if existing_doc:
+            logger.info("Found existing project for URL: %s", payload.instructables_url)
+            return Instruction(
+                id=existing_doc["_id"],
+                source_url=existing_doc["source_url"],
+                project=Project(**existing_doc["project"]),
+            )
+
         scraped_content = await scrape_site(payload.instructables_url)
         if not scraped_content:
             raise HTTPException(status_code=400, detail="Failed to scrape content")
@@ -141,6 +154,12 @@ async def new_chat(payload: NewChatRequest):
 
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors()) from e
+    except (httpx.HTTPStatusError, httpx.TimeoutException) as e:
+        # Pass through scraper 4xx errors, or 502 for scraper 5xx/timeouts
+        status_code = 400
+        if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
+            status_code = 404
+        raise HTTPException(status_code=status_code, detail=f"Scraper error: {str(e)}") from e
     except HTTPException:
         raise
     except Exception as e:

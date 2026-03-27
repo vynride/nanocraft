@@ -34,7 +34,6 @@ async def generate_instructions(content: str) -> Project:
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
                 response_json_schema=Project.model_json_schema(),
-                thinking_config=types.ThinkingConfig(thinking_level="medium"),
             ),
         )
     except Exception as e:

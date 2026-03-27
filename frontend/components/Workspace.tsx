@@ -282,11 +282,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                   <span className="text-[9px] uppercase tracking-widest text-stone-light/30 pointer-events-none select-none">
                     Fig {currentStep.stepNumber} · Visual
                   </span>
-                  {currentStep.imageUrl && (
-                    <span className="text-[9px] uppercase tracking-widest text-green-600/50 select-none">
-                      Ready
-                    </span>
-                  )}
                 </div>
 
                 {/* Image — fills remaining space */}
@@ -344,7 +339,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                 }`}
             >
               <span className="material-symbols-outlined text-sm">
-                smart_toy
+                robot_2
               </span>
               Assistant
             </button>

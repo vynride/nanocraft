@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Landing from "../components/Landing";
 import Processing from "../components/Processing";
 import { deconstructDIYProject } from "../services/apiService";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlParam = params.get("url");
+    if (urlParam) {
+      handleGenerate(urlParam);
+    }
+  }, [location.search]);
 
   const handleGenerate = async (url: string) => {
     setIsProcessing(true);
@@ -21,6 +30,7 @@ const LandingPage: React.FC = () => {
       setIsProcessing(false);
     }
   };
+
 
   if (isProcessing) {
     return <Processing />;

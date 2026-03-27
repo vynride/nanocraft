@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal-bg: #1A1A1A;
+  --color-charcoal: #2C2C2C;
+  --color-charcoal-dark: #1F1F1F;
+  --color-charcoal-darkest: #0F0F0F;
+  --color-workspace-bg: #1A1A1A;
+  --color-panel-dark: #222222;
+  --color-panel-light: #252525;
+  --color-graphite: #383838;
+  --color-clay: #9E8C81;
+  --color-clay-muted: #8C7B70;
+  --color-clay-dark: #6B5D55;
+  --color-off-white: #F2F0EB;
+  --color-stone-light: #E5E2DD;
+  --color-stone-dim: #A8A29E;
+  --color-alert-red: #7F3E3E;
+  --color-alert-bg: #2F1A1A;
+
+  --font-sans: "Lexend", sans-serif;
+  --font-display: "Instrument Serif", serif;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+}
+
+/* Custom Utilities and Base Styles */
+@layer base {
+  body {
+    @apply font-sans bg-[#1a1a1a] text-[#e5e2dd] antialiased overflow-x-hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1f1f1f;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #383838;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@layer components {
+  .clay-button {
+    background-color: #9e8c81;
+    transition: all 0.3s ease;
+  }
+  .clay-button:hover {
+    opacity: 0.85;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(
+      to right,
+      #2a2a2a 8%,
+      #333333 18%,
+      #2a2a2a 33%
+    );
+    background-size: 1000px 100%;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
