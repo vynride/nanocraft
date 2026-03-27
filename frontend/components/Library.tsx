@@ -1,12 +1,10 @@
 import React from "react";
-import { Project } from "../types";
 
 interface LibraryProps {
   onNewProject: () => void;
-  onOpenProject: (p: Project) => void;
 }
 
-const Library: React.FC<LibraryProps> = ({ onNewProject, onOpenProject }) => {
+const Library: React.FC<LibraryProps> = ({ onNewProject }) => {
   return (
     <div className="bg-charcoal-dark text-stone-light min-h-screen flex flex-col font-sans antialiased">
       <header className="w-full px-8 py-8 flex justify-between items-center fixed top-0 left-0 z-20">

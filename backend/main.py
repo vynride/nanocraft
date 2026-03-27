@@ -159,7 +159,9 @@ async def new_chat(payload: NewChatRequest):
         status_code = 400
         if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
             status_code = 404
-        raise HTTPException(status_code=status_code, detail=f"Scraper error: {str(e)}") from e
+        raise HTTPException(
+            status_code=status_code, detail=f"Scraper error: {str(e)}"
+        ) from e
     except HTTPException:
         raise
     except Exception as e:

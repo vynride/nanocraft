@@ -6,8 +6,24 @@ export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   {
+    ignores: [
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/*.min.js",
+      "**/build/**"
+    ],
+  },
+  {
     plugins: {
       react,
+    },
+    languageOptions: {
+      globals: {
+        window: "readonly",
+        document: "readonly",
+        console: "readonly",
+        process: "readonly"
+      }
     },
     rules: {
       "react/react-in-jsx-scope": "off",

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { Project, Step } from "../types";
+import { Project } from "../types";
 import {
   fetchProject,
   sendChatMessage,
@@ -17,7 +17,6 @@ interface WorkspaceProps {
 }
 
 const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
-  const navigate = useNavigate();
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
   const [steps, setSteps] = useState(project.steps);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -107,7 +106,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 
   const toggleStepCompletion = (idx: number) => {
     const newSteps = [...steps];
-    newSteps[idx] = { ...newSteps[idx], isCompleted: !newSteps[idx].isCompleted };
+    newSteps[idx] = {
+      ...newSteps[idx],
+      isCompleted: !newSteps[idx].isCompleted,
+    };
     setSteps(newSteps);
   };
 
@@ -115,7 +117,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
   const handleCompleteStep = () => {
     // Mark current step as completed (always, even if already true)
     const newSteps = [...steps];
-    newSteps[currentStepIdx] = { ...newSteps[currentStepIdx], isCompleted: true };
+    newSteps[currentStepIdx] = {
+      ...newSteps[currentStepIdx],
+      isCompleted: true,
+    };
     setSteps(newSteps);
 
     if (currentStepIdx < steps.length - 1) {
@@ -135,17 +140,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
     setChatLoading(true);
 
     try {
-      const response = await sendChatMessage(
-        project.id,
-        message,
-        chatMessages,
-      );
+      const response = await sendChatMessage(project.id, message, chatMessages);
       const assistantMsg: ChatMessage = {
         role: "assistant",
         content: response,
       };
       setChatMessages([...updatedMessages, assistantMsg]);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Chat error:", err);
       setChatError("Failed to get a response. Please try again.");
     } finally {
@@ -160,9 +161,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
     }
   };
 
-  const completedCount = steps.filter(
-    (s) => s.isCompleted,
-  ).length;
+  const completedCount = steps.filter((s) => s.isCompleted).length;
 
   const handleRowClick = (idx: number) => {
     if (idx !== currentStepIdx) {
@@ -247,7 +246,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 
       {/* ── Main layout ──────────────────────────────────────────────── */}
       <main className="flex-grow flex w-full h-[calc(100vh-3.5rem)] overflow-hidden">
-
         {/* ── Center: Image Visualizer ─────────────────────────────── */}
         <section className="flex-1 flex flex-col bg-workspace-bg relative overflow-hidden">
           {/* Step counter bar */}
@@ -274,7 +272,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
 
             {/* Card area */}
             <div className="flex-1 flex flex-col p-4 gap-3 overflow-hidden">
-
               {/* Image frame — same style as instruction box for consistency */}
               <div className="flex-1 min-h-0 bg-charcoal-dark border border-white/5 rounded-sm overflow-hidden flex flex-col">
                 {/* Header label bar */}
@@ -285,14 +282,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                 </div>
 
                 {/* Image — fills remaining space */}
-                <div
-                  className="relative flex-1 min-h-0 bg-[#111]"
-                >
+                <div className="relative flex-1 min-h-0 bg-[#111]">
                   {currentStep.imageUrl ? (
                     <img
                       src={currentStep.imageUrl}
                       alt={currentStep.altText}
-                      className="w-full h-full object-contain" style={{ maxHeight: "100%" }}
+                      className="w-full h-full object-contain"
+                      style={{ maxHeight: "100%" }}
                     />
                   ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
@@ -324,23 +320,23 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
           <div className="flex border-b border-white/5 shrink-0">
             <button
               onClick={() => setActiveTab("steps")}
-              className={`flex-1 py-3 text-xs uppercase tracking-widest font-medium transition-all ${activeTab === "steps"
-                ? "text-clay border-b-2 border-clay bg-white/5"
-                : "text-stone-light/40 hover:text-stone-light hover:bg-white/5"
-                }`}
+              className={`flex-1 py-3 text-xs uppercase tracking-widest font-medium transition-all ${
+                activeTab === "steps"
+                  ? "text-clay border-b-2 border-clay bg-white/5"
+                  : "text-stone-light/40 hover:text-stone-light hover:bg-white/5"
+              }`}
             >
               Steps
             </button>
             <button
               onClick={() => setActiveTab("chat")}
-              className={`flex-1 py-3 text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-1.5 ${activeTab === "chat"
-                ? "text-clay border-b-2 border-clay bg-white/5"
-                : "text-stone-light/40 hover:text-stone-light hover:bg-white/5"
-                }`}
+              className={`flex-1 py-3 text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center gap-1.5 ${
+                activeTab === "chat"
+                  ? "text-clay border-b-2 border-clay bg-white/5"
+                  : "text-stone-light/40 hover:text-stone-light hover:bg-white/5"
+              }`}
             >
-              <span className="material-symbols-outlined text-sm">
-                robot_2
-              </span>
+              <span className="material-symbols-outlined text-sm">robot_2</span>
               Assistant
             </button>
           </div>
@@ -355,12 +351,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                     <div
                       key={step.stepNumber}
                       onClick={() => handleRowClick(idx)}
-                      className={`px-4 py-3.5 border-b border-white/5 cursor-pointer transition-all ${idx === currentStepIdx
-                        ? "bg-white/[0.03] border-l-2 border-l-clay"
-                        : isCompleted
-                          ? "opacity-35"
-                          : "opacity-60 hover:opacity-100"
-                        }`}
+                      className={`px-4 py-3.5 border-b border-white/5 cursor-pointer transition-all ${
+                        idx === currentStepIdx
+                          ? "bg-white/[0.03] border-l-2 border-l-clay"
+                          : isCompleted
+                            ? "opacity-35"
+                            : "opacity-60 hover:opacity-100"
+                      }`}
                     >
                       <div className="flex items-start gap-3">
                         {/* Step circle — clicking it toggles button-completion */}
@@ -369,14 +366,18 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                             e.stopPropagation();
                             toggleStepCompletion(idx);
                           }}
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-medium transition-colors select-none ${isCompleted
-                            ? "bg-green-900/30 border-green-700/50 text-green-500"
-                            : "border-stone-light/20 text-stone-light/40 hover:border-clay/50"
-                            }`}
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-medium transition-colors select-none ${
+                            isCompleted
+                              ? "bg-green-900/30 border-green-700/50 text-green-500"
+                              : "border-stone-light/20 text-stone-light/40 hover:border-clay/50"
+                          }`}
                         >
                           {isCompleted ? (
                             /* Solid green check — marked via Complete Step button */
-                            <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>
+                            <span
+                              className="material-symbols-outlined text-xs"
+                              style={{ fontVariationSettings: "'FILL' 1" }}
+                            >
                               check
                             </span>
                           ) : (
@@ -387,10 +388,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                         <div className="flex-1 min-w-0 space-y-1.5">
                           <div className="flex items-center gap-2">
                             <h3
-                              className={`text-xs font-medium ${isCompleted
-                                ? "text-stone-light/40 line-through decoration-stone-light/40"
-                                : "text-off-white"
-                                }`}
+                              className={`text-xs font-medium ${
+                                isCompleted
+                                  ? "text-stone-light/40 line-through decoration-stone-light/40"
+                                  : "text-off-white"
+                              }`}
                             >
                               Step {step.stepNumber}
                             </h3>
@@ -422,14 +424,19 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
               <div className="p-3 bg-panel-light border-t border-white/5 shrink-0">
                 <button
                   onClick={handleCompleteStep}
-                  disabled={currentStepIdx === steps.length - 1 && steps[currentStepIdx]?.isCompleted}
+                  disabled={
+                    currentStepIdx === steps.length - 1 &&
+                    steps[currentStepIdx]?.isCompleted
+                  }
                   className="w-full clay-button bg-clay text-charcoal-dark hover:bg-off-white hover:text-charcoal px-4 py-2.5 font-medium text-xs tracking-wide rounded-sm flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {currentStepIdx === steps.length - 1
                     ? "Finish Project"
                     : "Complete Step"}
                   <span className="material-symbols-outlined text-sm">
-                    {currentStepIdx === steps.length - 1 ? "check_circle" : "arrow_forward"}
+                    {currentStepIdx === steps.length - 1
+                      ? "check_circle"
+                      : "arrow_forward"}
                   </span>
                 </button>
               </div>
@@ -480,30 +487,40 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                     className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[88%] px-3 py-2 text-[12px] leading-relaxed rounded-lg ${msg.role === "user"
-                        ? "bg-clay/20 text-off-white rounded-tr-none border border-clay/15"
-                        : "bg-charcoal-dark/80 text-stone-light/90 rounded-tl-none border border-white/5"
-                        }`}
+                      className={`max-w-[88%] px-3 py-2 text-[12px] leading-relaxed rounded-lg ${
+                        msg.role === "user"
+                          ? "bg-clay/20 text-off-white rounded-tr-none border border-clay/15"
+                          : "bg-charcoal-dark/80 text-stone-light/90 rounded-tl-none border border-white/5"
+                      }`}
                       style={{ wordBreak: "break-word" }}
                     >
                       {msg.role === "assistant" ? (
                         <div className="markdown-body space-y-1.5">
                           <ReactMarkdown
                             components={{
-                              p: ({ node, ...props }) => (
+                              p: ({ ...props }) => (
                                 <p className="mb-1.5 last:mb-0" {...props} />
                               ),
-                              ul: ({ node, ...props }) => (
-                                <ul className="list-disc pl-4 mb-1.5 last:mb-0" {...props} />
+                              ul: ({ ...props }) => (
+                                <ul
+                                  className="list-disc pl-4 mb-1.5 last:mb-0"
+                                  {...props}
+                                />
                               ),
-                              ol: ({ node, ...props }) => (
-                                <ol className="list-decimal pl-4 mb-1.5 last:mb-0" {...props} />
+                              ol: ({ ...props }) => (
+                                <ol
+                                  className="list-decimal pl-4 mb-1.5 last:mb-0"
+                                  {...props}
+                                />
                               ),
-                              li: ({ node, ...props }) => (
+                              li: ({ ...props }) => (
                                 <li className="mb-0.5 last:mb-0" {...props} />
                               ),
-                              strong: ({ node, ...props }) => (
-                                <strong className="font-semibold text-off-white" {...props} />
+                              strong: ({ ...props }) => (
+                                <strong
+                                  className="font-semibold text-off-white"
+                                  {...props}
+                                />
                               ),
                             }}
                           >
@@ -511,7 +528,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ project }) => {
                           </ReactMarkdown>
                         </div>
                       ) : (
-                        <div style={{ whiteSpace: "pre-wrap" }}>{msg.content}</div>
+                        <div style={{ whiteSpace: "pre-wrap" }}>
+                          {msg.content}
+                        </div>
                       )}
                     </div>
                   </div>

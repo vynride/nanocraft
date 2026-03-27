@@ -31,7 +31,6 @@ const LandingPage: React.FC = () => {
     }
   };
 
-
   if (isProcessing) {
     return <Processing />;
   }

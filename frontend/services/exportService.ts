@@ -5,37 +5,39 @@ import { Project } from "../types";
  * Each step includes its description and image URL.
  */
 export function exportMarkdown(project: Project): void {
-    const lines: string[] = [];
+  const lines: string[] = [];
 
-    lines.push(`# ${project.title}`);
+  lines.push(`# ${project.title}`);
+  lines.push("");
+  if (project.url) {
+    lines.push(`**Source:** ${project.url}`);
     lines.push("");
-    if (project.url) {
-        lines.push(`**Source:** ${project.url}`);
-        lines.push("");
+  }
+
+  for (const step of project.steps) {
+    lines.push(`## Step ${step.stepNumber}`);
+    lines.push("");
+    lines.push(step.sceneDescription);
+    lines.push("");
+    if (step.imageUrl) {
+      lines.push(
+        `![Step ${step.stepNumber} — ${step.altText}](${step.imageUrl})`,
+      );
+      lines.push("");
     }
+  }
 
-    for (const step of project.steps) {
-        lines.push(`## Step ${step.stepNumber}`);
-        lines.push("");
-        lines.push(step.sceneDescription);
-        lines.push("");
-        if (step.imageUrl) {
-            lines.push(`![Step ${step.stepNumber} — ${step.altText}](${step.imageUrl})`);
-            lines.push("");
-        }
-    }
+  const content = lines.join("\n");
+  const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
 
-    const content = lines.join("\n");
-    const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${slugify(project.title)}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${slugify(project.title)}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /**
@@ -44,54 +46,54 @@ export function exportMarkdown(project: Project): void {
  * No external libraries required.
  */
 export function exportPDF(project: Project): void {
-    const STYLE_ID = "nanocraft-print-style";
+  const STYLE_ID = "nanocraft-print-style";
 
-    // Remove any existing print style
-    document.getElementById(STYLE_ID)?.remove();
+  // Remove any existing print style
+  document.getElementById(STYLE_ID)?.remove();
 
-    // Build the printable HTML
-    const printHtml = buildPrintHtml(project);
+  // Build the printable HTML
+  const printHtml = buildPrintHtml(project);
 
-    // Open a new window with a clean print layout
-    const win = window.open("", "_blank", "width=800,height=900");
-    if (!win) {
-        alert("Please allow pop-ups to export as PDF.");
-        return;
-    }
+  // Open a new window with a clean print layout
+  const win = window.open("", "_blank", "width=800,height=900");
+  if (!win) {
+    alert("Please allow pop-ups to export as PDF.");
+    return;
+  }
 
-    win.document.write(printHtml);
-    win.document.close();
+  win.document.write(printHtml);
+  win.document.close();
 
-    // Wait for images to load before printing
-    win.onload = () => {
-        win.focus();
-        win.print();
-    };
+  // Wait for images to load before printing
+  win.onload = () => {
+    win.focus();
+    win.print();
+  };
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function slugify(text: string): string {
-    return text
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-        .slice(0, 60);
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 60);
 }
 
 function buildPrintHtml(project: Project): string {
-    const stepsHtml = project.steps
-        .map(
-            (step) => `
+  const stepsHtml = project.steps
+    .map(
+      (step) => `
       <section class="step">
         <h2>Step ${step.stepNumber}</h2>
         <p>${escapeHtml(step.sceneDescription)}</p>
         ${step.imageUrl ? `<img src="${step.imageUrl}" alt="${escapeHtml(step.altText)}" />` : ""}
-      </section>`
-        )
-        .join("\n");
+      </section>`,
+    )
+    .join("\n");
 
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -148,9 +150,9 @@ function buildPrintHtml(project: Project): string {
 }
 
 function escapeHtml(str: string): string {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

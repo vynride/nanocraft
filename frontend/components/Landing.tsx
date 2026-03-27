@@ -94,7 +94,6 @@ const Landing: React.FC<LandingProps> = ({ onGenerate, error }) => {
                 Generate DIY Instructions
               </button>
             </form>
-
           </section>
         </div>
       </main>
